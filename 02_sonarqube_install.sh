@@ -56,6 +56,27 @@ ulimit -n $max_num_archivos_abiertos
 ulimit -u $max_num_procesos_corriendo
 EOF
 
+#Agregar en /etc/profile los ulimit
+cat << EOF | sudo tee -a /etc/profile
+if [ \$USER = "sonar" ]; then
+ulimit -n 131072
+ulimit -u 8192
+fi
+EOF
+
+cat << EOF | sudo tee -a /etc/profile
+if [ \$USER = "ansible" ]; then
+ulimit -n 131072
+ulimit -u 8192
+fi
+EOF
+
+#Correr manualmente porsiaca
+sudo sysctl -w vm.max_map_count=524288
+sudo sysctl -w fs.file-max=131072
+ulimit -n 131072
+ulimit -u 8192
+
 #Configurar manualmente el servicio de SonarQube
 sudo cat <<EOF | sudo tee /etc/systemd/system/sonar.service
 [Unit]
