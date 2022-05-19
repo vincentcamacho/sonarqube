@@ -26,7 +26,7 @@ echo "postgres ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
         # sudo su postgres
         # createuser sonar
         # psql
-                # ALTER USER sonar WITH ENCRYPTED password 123;
+                # ALTER USER "sonar" WITH ENCRYPTED password '123';
                 # CREATE DATABASE sonarqube OWNER sonar;
                 # grant all privileges on DATABASE sonarqube to sonar;
                 # \q
