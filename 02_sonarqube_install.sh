@@ -7,7 +7,9 @@
 cd /tmp
 sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
 sudo unzip sonarqube-9.4.0.54424.zip -d /opt
+# sudo ln -s /opt/sonarqube-9.4.0.54424/ /opt/sonarqube
 sudo mv /opt/sonarqube-9.4.0.54424 /opt/sonarqube
+
 
 # Crear usuario para administrar SonarQube
 usuario_sonar=sonar; grupo_sonar=sonar; contrasena_sonar=123; bd_sonar=sonarqube; puerto_sonar=9000
