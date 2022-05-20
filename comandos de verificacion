@@ -1,4 +1,6 @@
----- COMANDOS PARA VERIFICAR LA INSTALACION -----
+#-------------------------------------------------
+#---- COMANDOS PARA VERIFICAR LA INSTALACION -----
+#-------------------------------------------------
 
 # Verificar el Java instalado
 java --version
@@ -40,7 +42,6 @@ cat /etc/systemd/system/sonar.service
 
 # Verificar wrapper.conf para ver si apunta a la carpeta correcta de tu Java (.....jdk/bin/java)
 cat $SONARQUBE_HOME/conf/wrapper.conf | grep wrapper.java.command=
-readlink -f $(which java)
 
 #Otros
 tail -8 /etc/sysctl.conf
