@@ -4,6 +4,7 @@
 #                       - Antes de instalar Sonarqube se debe haber creado la BD en Postgresql
 
 # ---------------- INSTALACION SONARQUBE 9.4 ----------------------------
+sudo apt install -y unzip wget
 sudo wget -P /tmp https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
 sudo unzip /tmp/sonarqube-9.4.0.54424.zip -d /opt
 sudo ln -s /opt/sonarqube-9.4.0.54424/ /opt/sonarqube
@@ -18,25 +19,18 @@ sudo chown -R $usuario_sonar:$grupo_sonar /opt/sonarqube
 echo "$usuario_sonar:123" | sudo chpasswd
 echo "$usuario_sonar ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
-# Limitar la cantidad de recursos disponibles en el sistema para el usuario que creamos para SonarQube
-max_num_archivos_abiertos=131072
-max_num_procesos_corriendo=8192
-
-sudo cat <<EOF | sudo tee -a /etc/security/limits.conf
-$usuario_sonar   -   nofile   $max_num_archivos_abiertos
-$usuario_sonar   -   nproc    $max_num_procesos_corriendo
-EOF
-
 # Configurar el archivo mas importante de SonarQube 'sonar.properties'
+sudo mkdir -p /var/sonarqube/data
+sudo mkdir -p /var/sonarqube/temp
+sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/data
+sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/temp
 sudo sed -i "s/#sonar.jdbc.username=/sonar.jdbc.username=$usuario_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i "s/#sonar.jdbc.password=/sonar.jdbc.password=$contrasena_sonar/g" /opt/sonarqube/conf/sonar.properties
-sudo sed -i "s/#sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/sonarqube?currentSchema=my_schema/sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/$bd_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i "s/#sonar.web.port=9000/sonar.web.port=$puerto_sonar/g" /opt/sonarqube/conf/sonar.properties
-sudo sed -i "s/#sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError/sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError/g" /opt/sonarqube/conf/sonar.properties
-sudo mkdir -p /var/sonarqube/data; sudo mkdir -p /var/sonarqube/temp
-sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/data; sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/temp
+sudo sed -i "s/#sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/sonarqube?currentSchema=my_schema/sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/$bd_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i 's/#sonar.path.data=data/sonar.path.data=\/var\/sonarqube\/data/g' /opt/sonarqube/conf/sonar.properties
 sudo sed -i 's/#sonar.path.temp=temp/sonar.path.temp=\/var\/sonarqube\/temp/g' /opt/sonarqube/conf/sonar.properties
+sudo sed -i "s/#sonar.search.javaOpts=.*/sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError/g" /opt/sonarqube/conf/sonar.properties
 
 # Editar usuario por defecto en el script 'sonar.sh'
 sudo sed -i "s/#RUN_AS_USER=/RUN_AS_USER=$usuario_sonar/g" /opt/sonarqube/bin/linux-x86-64/sonar.sh
@@ -46,6 +40,21 @@ echo "export SONARQUBE_HOME=/opt/sonarqube" | sudo tee -a /etc/profile
 echo "export SONAR_HOME=/opt/sonarqube" | sudo tee -a /etc/profile
 echo "export HSO=/opt/sonarqube" | sudo tee -a /etc/profile
 source /etc/profile
+
+#Correr manualmente porsiaca
+sudo sysctl -w vm.max_map_count=524288
+sudo sysctl -w fs.file-max=131072
+ulimit -n 131072
+ulimit -u 8192
+
+# Limitar la cantidad de recursos disponibles en el sistema para el usuario que creamos para SonarQube
+max_num_archivos_abiertos=131072
+max_num_procesos_corriendo=8192
+
+sudo cat <<EOF | sudo tee -a /etc/security/limits.conf
+$usuario_sonar   -   nofile   $max_num_archivos_abiertos
+$usuario_sonar   -   nproc    $max_num_procesos_corriendo
+EOF
 
 #Configurar limites en sysctl.conf
 sudo cat <<EOF | sudo tee -a /etc/sysctl.conf
@@ -70,12 +79,6 @@ ulimit -u 8192
 fi
 EOF
 
-#Correr manualmente porsiaca
-sudo sysctl -w vm.max_map_count=524288
-sudo sysctl -w fs.file-max=131072
-ulimit -n 131072
-ulimit -u 8192
-
 #Configurar manualmente el servicio de SonarQube
 sudo cat <<EOF | sudo tee /etc/systemd/system/sonar.service
 [Unit]
@@ -99,38 +102,69 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-#OJO HAY QUE crear la BD primero y luego iniciar el servicio
-# sudo su postgres
-# createuser sonar
-# psql
-# ALTER USER sonar WITH ENCRYPTED password '123';
-# CREATE DATABASE sonarqube OWNER sonar;
-# grant all privileges on DATABASE sonarqube to sonar;
+sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
+
+# ----------------- FIN DE LA INSTALACION -----------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+
+#OJO tuvimos que haber creado ya la BD antes de iniciar sonarqube
+#sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
+
+# ---- COMANDOS PARA VERIFICAR LA INSTALACION -----
+
+# # Verificar valores de sistema importantes
+# /sbin/sysctl vm.max_map_count
+# /sbin/sysctl fs.file-max
+# ulimit -n
+# ulimit -u
+
+# # Verificar archivos de configuracion importantes 
+# cat /opt/sonarqube/conf/sonar.properties | grep ^sonar.
+# cat /opt/sonarqube/bin/linux-x86-64/sonar.sh | grep RUN_AS_USER=
+
+# # Verificar directorios y usuario en el OS
+# cat /etc/passwd | grep sonar:
+# ls -l /var/sonarqube/
+# ls /opt/sonarqube/
+
+# # Verificar conexion con base de datos
+# sudo -u sonar psql -d sonarqube
+# \l
+# \du
 # \q
-# exit
-# sudo systemctl restart postgresql
+
+# # Verificar si los servicios estan arriba
+# sudo systemctl status postgresql
+# sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh status
 # sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
 
-#POSIBLES PROBLEMAS TIPICOS
-#No haber creado la BD
-#No haber configurado bien 
-#No haber configurado bien lo de abajo, ejemplo cuando se reinicia la maquina se pierde esa config
-#sudo sysctl -w vm.max_map_count=524288
-#sudo sysctl -w fs.file-max=131072
-#ulimit -n 131072
-#ulimit -u 8192
-#Hacer troubleshooting viendo los logs en /opt/sonarqube/logs/sonar.FECHAHOY.log
+# #Variable de ambiente
+# tail -15 /etc/profile
+# echo $SONARQUBE_HOME; echo $SONAR_HOME; echo $HSO
 
-#ESTO DE ABAJO NO ME FUNCIONO - NO CORRER
-# sudo systemctl start sonar
-# sudo systemctl enable sonar
+# #Otros
+# tail -8 /etc/sysctl.conf
+# tail -5 /etc/security/limits.conf
 
-#------------------------------------------------------------------------------
+
+#-------- POSIBLES PROBLEMAS TIPICOS ----------
+# No haber creado la BD
+# No haber configurado bien lo de abajo (cuando se reinicia la maquina se pierde esa config)
 # sudo sysctl -w vm.max_map_count=524288
 # sudo sysctl -w fs.file-max=131072
 # ulimit -n 131072
 # ulimit -u 8192
 
+#------------ TROUBLESHOOTING --------------
+#Hacer troubleshooting viendo los logs en /opt/sonarqube/logs/sonar.FECHAHOY.log
+
+# --- OJO - ESTO DE ABAJO NO ME FUNCIONO - NO CORRER -------
+# sudo systemctl start sonar
+# sudo systemctl enable sonar
+
+# --------- OJO NO SE PORQUE PUSE ESTO ACA LOL ----------
 # echo "sysctl -w vm.max_map_count=524288" | sudo tee -a /etc/sysctl.conf
 # echo "sysctl -w fs.file-max=131072" | sudo tee -a /etc/sysctl.conf
 # echo "ulimit -n 131072" | sudo tee -a /etc/sysctl.conf
