@@ -1,30 +1,24 @@
 vagrant@debian:~$ java --version
-readlink -f $(which java)
 openjdk 11.0.15 2022-04-19
 OpenJDK Runtime Environment (build 11.0.15+10-post-Debian-1deb11u1)
 OpenJDK 64-Bit Server VM (build 11.0.15+10-post-Debian-1deb11u1, mixed mode, sharing)
+
+vagrant@debian:~$ readlink -f $(which java)
 /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-vagrant@debian:~$ /sbin/sysctl vm.max_map_count
-/sbin/sysctl fs.file-max
-ulimit -n
-ulimit -u
-vm.max_map_count = 524288
-fs.file-max = 131072
-1024
-3778
-vagrant@debian:~$ ^C
-vagrant@debian:~$ ^C
+
 vagrant@debian:~$
-vagrant@debian:~$ /sbin/sysctl vm.max_map_count
+/sbin/sysctl vm.max_map_count
 /sbin/sysctl fs.file-max
 ulimit -n
 ulimit -u
+
 vm.max_map_count = 524288
 fs.file-max = 131072
 1024
 3778
+
 vagrant@debian:~$ cat /opt/sonarqube/conf/sonar.properties | grep ^sonar.
-cat /opt/sonarqube/bin/linux-x86-64/sonar.sh | grep RUN_AS_USER=
+
 sonar.jdbc.username=sonar
 sonar.jdbc.password=123
 sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube
@@ -32,18 +26,22 @@ sonar.web.port=9010
 sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError
 sonar.path.data=/var/sonarqube/data
 sonar.path.temp=/var/sonarqube/temp
+
+vagrant@debian:~$ cat /opt/sonarqube/bin/linux-x86-64/sonar.sh | grep RUN_AS_USER=
 RUN_AS_USER=sonar
             RUN_AS_USER=""
-vagrant@debian:~$
+
 vagrant@debian:~$ cat /etc/passwd | grep sonar:
-ls -l /var/sonarqube/
-ls /opt/sonarqube/
 sonar:x:1005:1004:usuario para SonarQube:/opt/sonarqube:/bin/sh
+
+vagrant@debian:~$ ls -l /var/sonarqube/
 total 8
 drwxr-xr-x 4 sonar sonar 4096 May  5 06:28 data
 drwxr-xr-x 7 sonar sonar 4096 May 19 18:42 temp
+
+vagrant@debian:~$ ls /opt/sonarqube/
 bin  conf  COPYING  data  dependency-license.json  elasticsearch  extensions  lib  logs  temp  web
-vagrant@debian:~$
+
 vagrant@debian:~$ sudo -u sonar psql -d sonarqube
 psql (14.3 (Debian 14.3-1.pgdg110+1))
 Type "help" for help.
@@ -53,7 +51,6 @@ sonarqube=> \l
    Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
 -----------+----------+----------+-------------+-------------+-----------------------
  postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
- sammy     | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
  sonarqube | sonar    | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =Tc/sonar            +
            |          |          |             |             | sonar=CTc/sonar
  template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
@@ -67,11 +64,11 @@ sonarqube=> \du
  Role name |                         Attributes                         | Member of
 -----------+------------------------------------------------------------+-----------
  postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
- sammy     | Superuser, Create role, Create DB                          | {}
  sonar     |                                                            | {}
  sonarqb   |                                                            | {}
 
 sonarqube=> \q
+
 vagrant@debian:~$ sudo systemctl status postgresql
 ● postgresql.service - PostgreSQL RDBMS
      Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
@@ -84,10 +81,12 @@ vagrant@debian:~$ sudo systemctl status postgresql
 
 May 19 17:37:18 debian systemd[1]: Starting PostgreSQL RDBMS...
 May 19 17:37:18 debian systemd[1]: Finished PostgreSQL RDBMS.
-vagrant@debian:~$ \sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh status\
-> ^C
-vagrant@debian:~$ \sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh status
+
+
+vagrant@debian:~$ sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh status
 SonarQube is running (2971).
+
+
 vagrant@debian:~$ tail -15 /etc/profile
     fi
   done
@@ -104,10 +103,14 @@ fi
 export SONARQUBE_HOME=/opt/sonarqube
 export SONAR_HOME=/opt/sonarqube
 export HSO=/opt/sonarqube
+
+
 vagrant@debian:~$ echo $SONARQUBE_HOME; echo $SONAR_HOME; echo $HSO
 /opt/sonarqube
 /opt/sonarqube
 /opt/sonarqube
+
+
 vagrant@debian:~$ cat /etc/systemd/system/sonar.service
 [Unit]
 Description=SonarQube service
@@ -128,10 +131,13 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-vagrant@debian:~$
+
+
 vagrant@debian:~$ cat $SONARQUBE_HOME/conf/wrapper.conf | grep wrapper.java.command=
 #wrapper.java.command=/path/to/my/jdk/bin/java
 wrapper.java.command=java
+
+
 vagrant@debian:~$ tail -8 /etc/sysctl.conf
 tail -5 /etc/security/limits.conf
 #kernel.sysrq=438
@@ -147,5 +153,3 @@ ulimit -u 8192
 # End of file
 sonar   -   nofile   131072
 sonar   -   nproc    8192
-vagrant@debian:~$
-vagrant@debian:~$
