@@ -112,43 +112,6 @@ sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
 #OJO tuvimos que haber creado ya la BD antes de iniciar sonarqube
 #sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
 
-# ---- COMANDOS PARA VERIFICAR LA INSTALACION -----
-
-# # Verificar valores de sistema importantes
-# /sbin/sysctl vm.max_map_count
-# /sbin/sysctl fs.file-max
-# ulimit -n
-# ulimit -u
-
-# # Verificar archivos de configuracion importantes 
-# cat /opt/sonarqube/conf/sonar.properties | grep ^sonar.
-# cat /opt/sonarqube/bin/linux-x86-64/sonar.sh | grep RUN_AS_USER=
-
-# # Verificar directorios y usuario en el OS
-# cat /etc/passwd | grep sonar:
-# ls -l /var/sonarqube/
-# ls /opt/sonarqube/
-
-# # Verificar conexion con base de datos
-# sudo -u sonar psql -d sonarqube
-# \l
-# \du
-# \q
-
-# # Verificar si los servicios estan arriba
-# sudo systemctl status postgresql
-# sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh status
-# sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
-
-# #Variable de ambiente
-# tail -15 /etc/profile
-# echo $SONARQUBE_HOME; echo $SONAR_HOME; echo $HSO
-
-# #Otros
-# tail -8 /etc/sysctl.conf
-# tail -5 /etc/security/limits.conf
-
-
 #-------- POSIBLES PROBLEMAS TIPICOS ----------
 # No haber creado la BD
 # No haber configurado bien lo de abajo (cuando se reinicia la maquina se pierde esa config)

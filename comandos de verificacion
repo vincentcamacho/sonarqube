@@ -1,0 +1,47 @@
+---- COMANDOS PARA VERIFICAR LA INSTALACION -----
+
+# Verificar el Java instalado
+java --version
+readlink -f $(which java)
+
+# Verificar valores de sistema importantes
+/sbin/sysctl vm.max_map_count
+/sbin/sysctl fs.file-max
+ulimit -n
+ulimit -u
+
+# Verificar archivos de configuracion importantes 
+cat /opt/sonarqube/conf/sonar.properties | grep ^sonar.
+cat /opt/sonarqube/bin/linux-x86-64/sonar.sh | grep RUN_AS_USER=
+
+# Verificar directorios y usuario en el OS
+cat /etc/passwd | grep sonar:
+ls -l /var/sonarqube/
+ls /opt/sonarqube/
+
+# Verificar conexion con base de datos
+sudo -u sonar psql -d sonarqube
+\l
+\du
+\q
+
+# Verificar si los servicios estan arriba
+sudo systemctl status postgresql
+sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh status
+sudo /opt/sonarqube/bin/linux-x86-64/sonar.sh start
+
+#Variable de ambiente
+tail -15 /etc/profile
+echo $SONARQUBE_HOME; echo $SONAR_HOME; echo $HSO
+
+# Verificar servicio
+cat /etc/systemd/system/sonar.service
+
+
+# Verificar wrapper.conf para ver si apunta a la carpeta correcta de tu Java (.....jdk/bin/java)
+cat $SONARQUBE_HOME/conf/wrapper.conf | grep wrapper.java.command=
+readlink -f $(which java)
+
+#Otros
+tail -8 /etc/sysctl.conf
+tail -5 /etc/security/limits.conf
