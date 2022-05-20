@@ -4,11 +4,10 @@
 #                       - Antes de instalar Sonarqube se debe haber creado la BD en Postgresql
 
 # ---------------- INSTALACION SONARQUBE 9.4 ----------------------------
-cd /tmp
-sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
-sudo unzip sonarqube-9.4.0.54424.zip -d /opt
-# sudo ln -s /opt/sonarqube-9.4.0.54424/ /opt/sonarqube
-sudo mv /opt/sonarqube-9.4.0.54424 /opt/sonarqube
+sudo wget -P /tmp https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
+sudo unzip /tmp/sonarqube-9.4.0.54424.zip -d /opt
+sudo ln -s /opt/sonarqube-9.4.0.54424/ /opt/sonarqube
+# sudo mv /opt/sonarqube-9.4.0.54424 /opt/sonarqube
 
 
 # Crear usuario para administrar SonarQube
