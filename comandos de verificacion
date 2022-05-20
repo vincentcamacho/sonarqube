@@ -19,7 +19,7 @@ cat /opt/sonarqube/bin/linux-x86-64/sonar.sh | grep RUN_AS_USER=
 # Verificar directorios y usuario en el OS
 cat /etc/passwd | grep sonar:
 ls -l /var/sonarqube/
-ls /opt/sonarqube/
+ls -l /opt/
 
 # Verificar conexion con base de datos
 sudo -u sonar psql -d sonarqube
