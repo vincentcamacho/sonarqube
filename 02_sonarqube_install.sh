@@ -3,12 +3,12 @@
 #       Requerimientos: - Java 11, Postgresql 14, SonarQube 9.4
 #                       - Antes de instalar Sonarqube se debe haber creado la BD en Postgresql
 
-# ---------------- INSTALACION SONARQUBE 9.4 ----------------------------
+
+# ---------------- INSTALACION SONARQUBE 9.6 ----------------------------
 sudo apt install -y unzip wget
-sudo wget -P /tmp https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
-sudo unzip /tmp/sonarqube-9.4.0.54424.zip -d /opt
-sudo ln -s /opt/sonarqube-9.4.0.54424/ /opt/sonarqube
-# sudo mv /opt/sonarqube-9.4.0.54424 /opt/sonarqube
+sudo wget -P /tmp https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.6.1.59531.zip
+sudo unzip /tmp/sonarqube-9.6.1.59531.zip -d /opt
+sudo ln -s /opt/sonarqube-9.6.1.59531/ /opt/sonarqube
 
 
 # Crear usuario para administrar SonarQube
