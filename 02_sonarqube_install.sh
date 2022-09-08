@@ -28,6 +28,7 @@ sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/temp
 
 # Configurar el archivo mas importante de SonarQube 'sonar.properties'
 # cat /opt/sonarqube/conf/sonar.properties | egrep 'sonar.jdbc.username=|sonar.jdbc.password=|sonar.jdbc.url='
+# sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube?currentSchema=my_schema
 sudo sed -i "s/#sonar.jdbc.username=/sonar.jdbc.username=$usuario_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i "s/#sonar.jdbc.password=/sonar.jdbc.password=$contrasena_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i "s/#sonar.web.port=9000/sonar.web.port=$puerto_sonar/g" /opt/sonarqube/conf/sonar.properties
