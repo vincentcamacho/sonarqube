@@ -16,7 +16,7 @@ usuario_sonar=sonar; grupo_sonar=sonar; contrasena_sonar=123; bd_sonar=sonarqube
 sudo groupadd $grupo_sonar
 sudo useradd -c "Usuario para SonarQube" -d /opt/sonarqube -g $grupo_sonar $usuario_sonar
 sudo chown -R $usuario_sonar:$grupo_sonar /opt/sonarqube
-sudo chown -R $usuario_sonar:$grupo_sonar /opt/sonarqube-9.4.0.54424/
+sudo chown -R $usuario_sonar:$grupo_sonar /opt/sonarqube-9.6.1.59531/
 echo "$usuario_sonar:123" | sudo chpasswd
 echo "$usuario_sonar ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
