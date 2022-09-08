@@ -9,7 +9,7 @@ sudo apt update -y && sudo apt upgrade -y
 # ---------------- INSTALACION JAVA 11 ----------------------------
 sudo apt install openjdk-11-jdk -y
 
-# ---------------- INSTALACION POSTGRESQL 14 ----------------------------
+# ---------------- INSTALACION POSTGRESQL 13 ----------------------------
 sudo apt -y install gnupg2 wget ca-certificates lsb-release software-properties-common
 
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
