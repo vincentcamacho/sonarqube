@@ -20,11 +20,14 @@ sudo chown -R $usuario_sonar:$grupo_sonar /opt/sonarqube-9.6.1.59531/
 echo "$usuario_sonar:123" | sudo chpasswd
 echo "$usuario_sonar ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
-# Configurar el archivo mas importante de SonarQube 'sonar.properties'
+# Crear 2 carpetas importantes llamadas DATA y TEMP
 sudo mkdir -p /var/sonarqube/data
 sudo mkdir -p /var/sonarqube/temp
 sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/data
 sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/temp
+
+# Configurar el archivo mas importante de SonarQube 'sonar.properties'
+# cat /opt/sonarqube/conf/sonar.properties | egrep 'sonar.jdbc.username=|sonar.jdbc.password=|sonar.jdbc.url='
 sudo sed -i "s/#sonar.jdbc.username=/sonar.jdbc.username=$usuario_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i "s/#sonar.jdbc.password=/sonar.jdbc.password=$contrasena_sonar/g" /opt/sonarqube/conf/sonar.properties
 sudo sed -i "s/#sonar.web.port=9000/sonar.web.port=$puerto_sonar/g" /opt/sonarqube/conf/sonar.properties
