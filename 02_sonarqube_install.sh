@@ -27,15 +27,16 @@ sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/data
 sudo chown -R $usuario_sonar:$grupo_sonar /var/sonarqube/temp
 
 # Configurar el archivo mas importante de SonarQube 'sonar.properties'
-# cat /opt/sonarqube/conf/sonar.properties | egrep 'sonar.jdbc.username=|sonar.jdbc.password=|sonar.jdbc.url=jdbc:postgresql'
+# cat /opt/sonarqube/conf/sonar.properties | egrep 'sonar.jdbc.username=|sonar.jdbc.password=|sonar.web.port=|sonar.jdbc.url=jdbc:postgresql|sonar.path.data=|sonar.path.temp=|sonar.search.javaOpts='
 # sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube?currentSchema=my_schema
-sudo sed -i "s/#sonar.jdbc.username=/sonar.jdbc.username=$usuario_sonar/g" /opt/sonarqube/conf/sonar.properties
-sudo sed -i "s/#sonar.jdbc.password=/sonar.jdbc.password=$contrasena_sonar/g" /opt/sonarqube/conf/sonar.properties
-sudo sed -i "s/#sonar.web.port=9000/sonar.web.port=$puerto_sonar/g" /opt/sonarqube/conf/sonar.properties
-sudo sed -i "s/#sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/sonarqube?currentSchema=my_schema/sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/$bd_sonar/g" /opt/sonarqube/conf/sonar.properties
-sudo sed -i 's/#sonar.path.data=data/sonar.path.data=\/var\/sonarqube\/data/g' /opt/sonarqube/conf/sonar.properties
-sudo sed -i 's/#sonar.path.temp=temp/sonar.path.temp=\/var\/sonarqube\/temp/g' /opt/sonarqube/conf/sonar.properties
-sudo sed -i "s/#sonar.search.javaOpts=.*/sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError/g" /opt/sonarqube/conf/sonar.properties
+
+sudo sed -i "s/^#sonar.jdbc.username=.*/sonar.jdbc.username=$usuario_sonar/g" /opt/sonarqube/conf/sonar.properties
+sudo sed -i "s/^#sonar.jdbc.password=.*/sonar.jdbc.password=$contrasena_sonar/g" /opt/sonarqube/conf/sonar.properties
+sudo sed -i "s/^#sonar.web.port=.*/sonar.web.port=$puerto_sonar/g" /opt/sonarqube/conf/sonar.properties
+sudo sed -i "s/^#sonar.jdbc.url=jdbc:postgresql.*/sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/$bd_sonar/g" /opt/sonarqube/conf/sonar.properties
+sudo sed -i 's/^#sonar.path.data=.*/sonar.path.data=\/var\/sonarqube\/data/g' /opt/sonarqube/conf/sonar.properties
+sudo sed -i 's/^#sonar.path.temp=.*/sonar.path.temp=\/var\/sonarqube\/temp/g' /opt/sonarqube/conf/sonar.properties
+sudo sed -i "s/^#sonar.search.javaOpts=.*/sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError/g" /opt/sonarqube/conf/sonar.properties
 
 # Editar usuario por defecto en el script 'sonar.sh'
 sudo sed -i "s/#RUN_AS_USER=/RUN_AS_USER=$usuario_sonar/g" /opt/sonarqube/bin/linux-x86-64/sonar.sh
