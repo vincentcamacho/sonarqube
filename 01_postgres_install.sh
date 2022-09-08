@@ -17,7 +17,7 @@ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)
 curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
 
 sudo apt update -y
-sudo apt install -y postgresql
+sudo apt install -y postgresql-13
 
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
