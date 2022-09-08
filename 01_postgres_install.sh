@@ -23,7 +23,8 @@ sudo systemctl start postgresql
 sudo systemctl enable postgresql
 sudo systemctl status postgresql
 
-usuario_psql=postgres; contrasena_psql=123;
+usuario_psql=postgres
+contrasena_psql=123;
 echo "$usuario_psql:$contrasena_psql" | sudo chpasswd
 echo "postgres ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
