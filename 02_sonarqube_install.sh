@@ -41,6 +41,12 @@ sudo sed -i "s/^#sonar.search.javaOpts=.*/sonar.search.javaOpts=-Xmx512m -Xms512
 # Editar usuario por defecto en el script 'sonar.sh'
 sudo sed -i "s/#RUN_AS_USER=/RUN_AS_USER=$usuario_sonar/g" /opt/sonarqube/bin/linux-x86-64/sonar.sh
 
+# Editar RUN_AS_USER en el script 'sonar.sh'
+sudo sed -i "s/#RUN_AS_USER=/RUN_AS_USER=$usuario_sonar/g" /opt/sonarqube/bin/linux-x86-64/sonar.sh
+
+# Si no existe RUN_AS_USER agregarlo manualmente
+# sudo sed -i "1a RUN_AS_USER=$usuario_sonar" /opt/sonarqube/bin/linux-x86-64/sonar.sh
+
 # Configurar variables de ambiente (environmental variables)
 echo "export SONARQUBE_HOME=/opt/sonarqube" | sudo tee -a /etc/profile
 echo "export SONAR_HOME=/opt/sonarqube" | sudo tee -a /etc/profile
